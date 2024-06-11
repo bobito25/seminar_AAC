@@ -42,7 +42,7 @@ touch ${DAT_FILE}
 #python -m scoop $EXE -v ${CONFIG_PARAMS} --datfile ${DAT_FILE} > ${LOGS} 2>&1
 #echo $EXE $*
 #python $EXE -v ${CONFIG_PARAMS}
-python $EXE -v ${CONFIG_PARAMS} --datfile ${DAT_FILE} > ${LOGS} 2>&1
+python3 $EXE -v ${CONFIG_PARAMS} --datfile ${DAT_FILE} > ${LOGS} 2>&1
 
 error() {
     echo "`TZ=UTC date`: error: $@"
@@ -52,7 +52,7 @@ error() {
 # This is an example of reading a number from the output.
 # It assumes that the objective value is the first number in
 # the first column of the last line of the output.
-if [ -s "${DAT_FILE}" ]; then
+if [ -e "${DAT_FILE}" ]; then
 	COST=$(cat "${DAT_FILE}" | grep -e '^[0-9]' | cut -f1)
 	# use echo "-$COST" to
 	# Negative because score is maximised but irace minimises.

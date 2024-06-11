@@ -1,1 +1,1 @@
-['../irace_score_function.py', '--pop=1', '--trnmt=1', '--cros=6', '--mut=7', '--datfile', 'c51-3.dat']
+['../irace_score_function.py', '--pop=200', '--tnrmt=10', '--mut=0.05', '--cros=0.85', '--datfile=testdatfile.dat']

@@ -26,6 +26,7 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                   3: 4:      5:
-population      "--pop="        i  (1, 10)
-crossover       "--cros="       i  (1, 10)
-mutation        "--mut="        i  (1, 10)
+population      "--pop="        i  (10, 30)
+tournament      "--tnrmt="      i  (1, 10)
+mutation        "--mut="        r  (0.01, 0.99)
+crossover       "--cros="       r  (0.01, 0.99)

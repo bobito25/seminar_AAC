@@ -65,7 +65,8 @@ def geneticAlgorithm(
     print_output=False,
 ):
     gen_number = 0
-    for i in range(200):
+    NUM_GENERATIONS = 3
+    for i in range(NUM_GENERATIONS):
         new_population = []
 
         # selecting two of the best options we have (elitism)

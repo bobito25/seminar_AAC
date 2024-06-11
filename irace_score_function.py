@@ -6,7 +6,7 @@ import sys
 
 from solve_tsp import solve_tsp_from_file
 
-def main(POP, TNRMT, CXPB, MUTPB, DATFILE):
+def main(POP, TNRMT, MUTPB, CXPB, DATFILE):
 	# just a test
 	#score = MUTPB*POP/100
 	#score = float(score)
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 	ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
 	# 3 args to test values
 	ap.add_argument('--pop', dest='pop', type=int, required=True, help='Population size')
-	ap.add_argument('--tnrmt', dest='tnrmt', type=float, required=True, help='Tournament selection size')
+	ap.add_argument('--tnrmt', dest='tnrmt', type=int, required=True, help='Tournament selection size')
 	ap.add_argument('--mut', dest='mut', type=float, required=True, help='Mutation probability')
 	ap.add_argument('--cros', dest='cros', type=float, required=True, help='Crossover probability')
 	# 1 arg file name to save and load fo value
@@ -40,4 +40,4 @@ if __name__ == "__main__":
 	args = ap.parse_args()
 	logging.debug(args)
 	# call main function passing args
-	main(args.pop, args.cros, args.mut, args.datfile)
+	main(args.pop, args.tnrmt, args.mut, args.cros, args.datfile)
