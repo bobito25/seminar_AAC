@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # get cities info
 def getCity():
     cities = []
-    f = open("genetic_tsp/TSP.txt")
+    f = open("TSP.txt")
     for i in f.readlines():
         node_city_val = i.split()
         cities.append(
