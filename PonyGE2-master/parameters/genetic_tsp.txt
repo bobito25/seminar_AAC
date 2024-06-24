@@ -1,0 +1,5 @@
+GRAMMAR_FILE:           genetic_tsp.bnf
+VERBOSE:                True
+GENERATIONS:            1
+MAX_GENOME_LENGTH:      10
+FITNESS_FUNCTION:       genetic_tsp

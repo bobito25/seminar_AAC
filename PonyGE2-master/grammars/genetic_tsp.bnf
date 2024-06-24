@@ -1,0 +1,24 @@
+# Grammar for genetic tsp solver
+<p> ::= <init> <action>
+
+<init> ::= 'init_pop' <size>
+
+<size> ::= 10 | 15 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | 100
+
+<action> ::= <action> <action> | <cycle>
+
+<cycle> ::= <select> <cross> <mutate> <replace>
+
+<select> ::= 'roulette' <percent> | 'tournament' <tournament_size> <percent> | 'rank' <percent>
+
+<percent> ::= 0.05 | 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1
+<tournament_size> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+<cross> ::= 'pmx' | 'ox' | 'cx'
+
+<mutate> ::= 'swap' <mutation_rate> | 'inversion' <mutation_rate> | 'scramble' <mutation_rate>
+
+<mutation_rate> ::= 0.005 | 0.01 | 0.02 | 0.03 | 0.04 | 0.05 | 0.075 | 0.1 | 0.15 | 0.2 | 0.3 | 0.4 | 0.5
+
+<replace> ::= 'generational' | 'steady_state' <percent> | 'elitism' <percent> | 'mu_plus_lambda' | 'mu_comma_lambda' | 'fitness_proportionate' | 'random'
+
