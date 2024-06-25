@@ -19,6 +19,7 @@ def solve_tsp(problem: dict, params: dict, print_output=False) -> int:
     mutation_rate = params["mutation_rate"]
     crossover_rate = params["crossover_rate"]
     target = params["target"]
+    generation_num = params["generation_num"]
 
     cities = problem["cities"]
     firstPopulation, firstFitest = selectPopulation(cities, population_size)
@@ -29,6 +30,7 @@ def solve_tsp(problem: dict, params: dict, print_output=False) -> int:
         mutation_rate,
         crossover_rate,
         target,
+        generation_num
     )
     
     if print_output:
@@ -43,7 +45,7 @@ def solve_tsp(problem: dict, params: dict, print_output=False) -> int:
 
     return answer[0]
 
-def solve_tsp_from_file(params: dict, filename: str = "genetic_tsp/TSP.txt") -> int:
+def solve_tsp_from_file(params: dict, filename: str = "../TSP.txt") -> int:
     with open(filename, "r") as f:
         cities = []
         for line in f.readlines():
@@ -52,13 +54,13 @@ def solve_tsp_from_file(params: dict, filename: str = "genetic_tsp/TSP.txt") -> 
         problem = {"cities": cities}
     return solve_tsp(problem, params)
 
-POPULATION_SIZE = 2000
-TOURNAMENT_SELECTION_SIZE = 4
+POPULATION_SIZE = 3000
+TOURNAMENT_SELECTION_SIZE = 20
 MUTATION_RATE = 0.1
 CROSSOVER_RATE = 0.9
 TARGET = 100.0
 
-TSP = setup_tsp(5, 10, 10)
+#TSP = setup_tsp(5, 10, 10)
 #write_tsp_to_file(TSP)
 #answer = solve_tsp_from_file({"population_size": POPULATION_SIZE, "tournament_selection_size": TOURNAMENT_SELECTION_SIZE, "mutation_rate": MUTATION_RATE, "crossover_rate": CROSSOVER_RATE, "target": TARGET})
 #print(answer)

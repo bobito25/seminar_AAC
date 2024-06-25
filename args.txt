@@ -1,0 +1,1 @@
+['irace_score_function.py', '--pop=22', '--tnrmt=10', '--mut=0.58', '--cros=0.85', '--gen=19', '--datfile=res.dat']

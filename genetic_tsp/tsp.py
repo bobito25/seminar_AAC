@@ -62,10 +62,10 @@ def geneticAlgorithm(
     MUTATION_RATE,
     CROSSOVER_RATE,
     TARGET,
+    NUM_GENERATIONS = 10,
     print_output=False,
 ):
     gen_number = 0
-    NUM_GENERATIONS = 3
     for i in range(NUM_GENERATIONS):
         new_population = []
 

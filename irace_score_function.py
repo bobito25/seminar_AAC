@@ -6,7 +6,7 @@ import sys
 
 from solve_tsp import solve_tsp_from_file
 
-def main(POP, TNRMT, MUTPB, CXPB, DATFILE):
+def main(POP, TNRMT, MUTPB, CXPB, GEN, DATFILE):
 	# just a test
 	#score = MUTPB*POP/100
 	#score = float(score)
@@ -15,7 +15,7 @@ def main(POP, TNRMT, MUTPB, CXPB, DATFILE):
 	#score = float((POP-1)**2 + (CXPB-2)**2 + (MUTPB-3)**2 + 1)
 	#if score < 0:
 	#	score = 0
-	score = solve_tsp_from_file(params={"population_size": POP, "tournament_selection_size": TNRMT, "mutation_rate": MUTPB, "crossover_rate": CXPB, "target": 1.0}, filename="../genetic_tsp/TSP.txt")
+	score = solve_tsp_from_file(params={"population_size": POP, "tournament_selection_size": TNRMT, "mutation_rate": MUTPB, "crossover_rate": CXPB, "target": 1.0, "generation_num": GEN}, filename="../TSP.txt")
 
 	# save the fo values in DATFILE
 	with open(DATFILE, 'w') as f:
@@ -34,10 +34,11 @@ if __name__ == "__main__":
 	ap.add_argument('--tnrmt', dest='tnrmt', type=int, required=True, help='Tournament selection size')
 	ap.add_argument('--mut', dest='mut', type=float, required=True, help='Mutation probability')
 	ap.add_argument('--cros', dest='cros', type=float, required=True, help='Crossover probability')
+	ap.add_argument('--gen', dest='gen', type=int, required=True, help='Number generations')
 	# 1 arg file name to save and load fo value
 	ap.add_argument('--datfile', dest='datfile', type=str, required=True, help='File where it will be save the score (result)')
 
 	args = ap.parse_args()
 	logging.debug(args)
 	# call main function passing args
-	main(args.pop, args.tnrmt, args.mut, args.cros, args.datfile)
+	main(args.pop, args.tnrmt, args.mut, args.cros, args.gen, args.datfile)

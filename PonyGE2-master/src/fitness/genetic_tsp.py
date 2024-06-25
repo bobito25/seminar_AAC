@@ -64,7 +64,7 @@ class genetic_tsp(base_ff):
             "fitness_proportionate": {"f": self.replacement_fitness_proportionate, "num_params": 0},
             "random": {"f": self.replacement_random, "num_params": 0}
         }
-        self.population = []
+        self.population = np.array([])
         self.parents = []
         self.new_gen = []
         # Initialise base fitness function class.
@@ -89,29 +89,31 @@ class genetic_tsp(base_ff):
 
         # Evaluate the fitness of the phenotype
         fitness = self.parse_genome(ind.phenotype)
+        if self.population:
+            print(min(self.population, key=lambda x: x[0]))
         return fitness
     
     def parse_genome(self, genome):
         action_list = genome.split(" ")
         while len(action_list) != 0:
             next_action = action_list.pop(0)
-            print(next_action)
+            #print(next_action)
             action = self.actions[next_action]
             if action["num_params"] != 0:
                 params = [action_list.pop(0) for _ in range(action["num_params"])]
-                print("params:",params)
+                #print("params:",params)
                 action["f"](*params)
             else:
                 action["f"]()
             if not self.population:
                 return np.NaN
             if len(self.population) > 1000:
-                print("population limit reached, pruning...")
+                #print("population limit reached, pruning...")
                 self.population = self.population[:1000]
-            self.validate()
-            print("population size:",len(self.population))
-            print("parent size:",len(self.parents))
-            print("new gen size:",len(self.new_gen))
+            #self.validate()
+            #print("population size:",len(self.population))
+            #print("parent size:",len(self.parents))
+            #print("new gen size:",len(self.new_gen))
         return self.get_fitness()
     
     def get_fitness(self):
@@ -250,7 +252,7 @@ class genetic_tsp(base_ff):
             self.new_gen.append(offspring2)
 
             if time.time() > timeout:
-                print("crossover timeout, continuing...")
+                #print("crossover timeout, continuing...")
                 return
     
     # Order Crossover
@@ -289,7 +291,7 @@ class genetic_tsp(base_ff):
             self.new_gen.append(offspring2)
 
             if time.time() > timeout:
-                print("crossover timeout, continuing...")
+                #print("crossover timeout, continuing...")
                 return
 
     # Cycle Crossover
@@ -331,7 +333,7 @@ class genetic_tsp(base_ff):
             self.new_gen.append(offspring2)
 
             if time.time() > timeout:   
-                print("crossover timeout, continuing...")
+                #print("crossover timeout, continuing...")
                 return
 
     # Swap Mutation
@@ -373,7 +375,7 @@ class genetic_tsp(base_ff):
             raise ValueError("mutation changed number of members of new gen")
     
     def replacement_generational(self):
-        self.population = sorted([[calcDistance(ind), ind] for ind in self.new_gen], key=lambda x: x[0])
+        self.population = sorted(calculate_population_distances(self.new_gen), key=lambda x: x[0])
         self.new_gen = []
 
     def replacement_steady_state(self, percent):
@@ -381,7 +383,7 @@ class genetic_tsp(base_ff):
         len_before = len(self.population)
         num = int(len(self.population) * percent)
         self.population = sorted(self.population, key=lambda x: x[0])[:num]
-        new_sorted = sorted([[calcDistance(ind), ind] for ind in self.new_gen], key=lambda x: x[0])
+        new_sorted = sorted(calculate_population_distances(self.new_gen), key=lambda x: x[0])
         self.population += new_sorted[:len_before-num]
         self.new_gen = []
 
@@ -389,17 +391,17 @@ class genetic_tsp(base_ff):
         percent = float(percent)
         elite_size = int(len(self.population) * percent)
         elite = sorted(self.population, key=lambda x: x[0])[:elite_size]
-        remaining_offspring = sorted([[calcDistance(ind), ind] for ind in self.new_gen], key=lambda x: x[0])[:len(self.population) - elite_size]
+        remaining_offspring = sorted(calculate_population_distances(self.new_gen), key=lambda x: x[0])[:len(self.population) - elite_size]
         self.population = sorted(elite + remaining_offspring, key=lambda x: x[0])
         self.new_gen = []
 
     def replacement_mu_plus_lambda_(self):
-        combined = self.population + [[calcDistance(ind), ind] for ind in self.new_gen]
+        combined = self.population + calculate_population_distances(self.new_gen)
         self.population = sorted(combined, key=lambda x: x[0])[:len(self.population)]
         self.new_gen = []
 
     def replacement_mu_comma_lambda(self):
-        self.population = sorted([[calcDistance(ind), ind] for ind in self.new_gen], key=lambda x: x[0])[:len(self.population)]
+        self.population = sorted(calculate_population_distances(self.new_gen), key=lambda x: x[0])[:len(self.population)]
         self.new_gen = []
 
     def replacement_fitness_proportionate(self):
@@ -422,7 +424,7 @@ class genetic_tsp(base_ff):
                     return self.new_gen[i]
             raise ValueError("this should not be reachable",locals())
 
-        self.population = [[calcDistance(ind), ind] for ind in [select_one() for _ in range(len(self.population))]]
+        self.population = calculate_population_distances([select_one() for _ in range(len(self.population))])
         self.new_gen = []
 
     def replacement_random(self):
@@ -441,28 +443,71 @@ def getCity():
     for i in f.readlines():
         node_city_val = i.split()
         cities.append(
-            (node_city_val[0], float(node_city_val[1]), float(node_city_val[2]))
+            [float(node_city_val[1]), float(node_city_val[2])]
         )
 
     return cities
 
 # calculating distance of the cities -> fitness of this instance (subject to minimization)
-def calcDistance(cities):
-    total_sum = 0
-    for i in range(len(cities) - 1):
-        cityA = cities[i]
-        cityB = cities[i + 1]
+def calcDistance(nodes):
+    # Calculate the differences between consecutive points
+    diff = np.diff(nodes, axis=0)
+    
+    # Calculate the Euclidean distance for each step
+    distances = np.sqrt(np.sum(diff**2, axis=1))
+    
+    # Sum up all the distances
+    total_distance = np.sum(distances)
+    
+    return total_distance
 
-        d = math.sqrt(
-            math.pow(cityB[1] - cityA[1], 2) + math.pow(cityB[2] - cityA[2], 2)
-        )
+def calculate_population_distances(population):
+    if not population:
+        return []
+    # Convert population to a 3D NumPy array
+    # Shape: (num_paths, num_nodes, 2)
+    pop_array = np.array(population).astype(float)
+    
+    # Calculate differences between consecutive points for all paths
+    # Shape: (num_paths, num_nodes-1, 2)
+    diffs = np.diff(pop_array, axis=1)
+    
+    # Calculate squared distances
+    # Shape: (num_paths, num_nodes-1)
+    squared_distances = np.sum(diffs**2, axis=2)
+    
+    # Calculate total distances for each path
+    # Shape: (num_paths,)
+    total_distances = np.sqrt(squared_distances).sum(axis=1)
 
-        total_sum += d
+    # Create the result list
+    results = [[dist, path.tolist()] for dist, path in zip(total_distances, pop_array)]
+    
+    return results
 
-    cityA = cities[0]
-    cityB = cities[-1]
-    d = math.sqrt(math.pow(cityB[1] - cityA[1], 2) + math.pow(cityB[2] - cityA[2], 2))
+def calculate_population_distances_numpy(population):
+    if not population:
+        return []
+    
+    # Convert population to a 3D NumPy array
+    # Shape: (num_paths, num_nodes, 2)
+    pop_array = np.array(population, dtype=float)
+    
+    # Calculate differences between consecutive points for all paths
+    # Shape: (num_paths, num_nodes-1, 2)
+    diffs = np.diff(pop_array, axis=1)
+    
+    # Calculate squared distances
+    # Shape: (num_paths, num_nodes-1)
+    squared_distances = np.sum(diffs**2, axis=2)
+    
+    # Calculate total distances for each path
+    # Shape: (num_paths,)
+    total_distances = np.sqrt(squared_distances).sum(axis=1)
 
-    total_sum += d
+    # Combine distances with paths
+    results = np.column_stack((total_distances.reshape(-1, 1), pop_array.reshape(pop_array.shape[0], -1)))
+    
+    #final_results = [[row[0], row[1:].reshape(-1, 2).tolist()] for row in results]
 
-    return total_sum
+    return results

@@ -1,1 +1,1 @@
-['../irace_score_function.py', '-v', '--pop=26', '--tnrmt=8', '--mut=0.69', '--cros=0.88', '--datfile', 'c124-6.dat']
+['../irace_score_function.py', '--pop=1850', '--tnrmt=5', '--mut=0.3', '--cros=0.94', '--gen=20', '--datfile=res.dat']
