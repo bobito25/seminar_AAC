@@ -465,3 +465,60 @@ genome = "init_pop 300 roulette 0.1 ox inversion 0.5 mu_comma_lambda rank 0.9 pm
 solution = solver.parse_genome(genome)
 
 print(solution)
+
+"""
+[[76.0, 93.0], [71.0, 97.0], [40.0, 73.0], [39.0, 61.0], [49.0, 64.0], [54.0, 50.0], [52.0, 38.0], [61.0, 39.0], [72.0, 33.0], [94.0, 18.0], [66.0, 18.0], [52.0, 8.0], [25.0, 13.0], [16.0, 12.0], [3.0, 2.0], [11.0, 27.0], [19.0, 31.0], [21.0, 32.0], [9.0, 43.0], [5.0, 84.0]]
+1 66 18
+2 19 31
+3 11 27
+4 39 61
+5 61 39
+6 5 84
+7 52 38
+8 94 18
+9 21 32
+10 9 43
+11 71 97
+12 76 93
+13 52 8
+14 3 2
+15 54 50
+16 16 12
+17 40 73
+18 25 13
+19 49 64
+20 72 33
+
+"""
+nodes = [[76.0, 93.0], [71.0, 97.0], [40.0, 73.0], [39.0, 61.0], [49.0, 64.0], [54.0, 50.0], [52.0, 38.0], [61.0, 39.0], [72.0, 33.0], [94.0, 18.0], [66.0, 18.0], [52.0, 8.0], [25.0, 13.0], [16.0, 12.0], [3.0, 2.0], [11.0, 27.0], [19.0, 31.0], [21.0, 32.0], [9.0, 43.0], [5.0, 84.0]]
+diff = np.diff(nodes, axis=0)
+distances = np.sqrt(np.sum(diff**2, axis=1))
+total_distance = np.sum(distances)
+print(total_distance)
+
+# calculating distance of the cities
+def calcDistance(nodes):
+    total_sum = 0
+    for i in range(len(nodes) - 1):
+        cityA = nodes[i]
+        cityB = nodes[i + 1]
+
+        d = math.sqrt(
+            math.pow(cityB[0] - cityA[0], 2) + math.pow(cityB[1] - cityA[1], 2)
+        )
+
+        total_sum += d
+
+    cityA = nodes[0]
+    cityB = nodes[-1]
+    d = math.sqrt(math.pow(cityB[0] - cityA[0], 2) + math.pow(cityB[1] - cityA[1], 2))
+
+    total_sum += d
+
+    return total_sum
+
+print("---------")
+
+nodes = [[76.0, 93.0], [71.0, 97.0], [40.0, 73.0], [39.0, 61.0], [49.0, 64.0], [54.0, 50.0], [52.0, 38.0], [61.0, 39.0], [72.0, 33.0], [94.0, 18.0], [66.0, 18.0], [52.0, 8.0], [25.0, 13.0], [16.0, 12.0], [3.0, 2.0], [11.0, 27.0], [19.0, 31.0], [21.0, 32.0], [9.0, 43.0], [5.0, 84.0]]
+
+print(calcDistance(nodes))

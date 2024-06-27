@@ -89,8 +89,8 @@ class genetic_tsp(base_ff):
 
         # Evaluate the fitness of the phenotype
         fitness = self.parse_genome(ind.phenotype)
-        if self.population:
-            print(min(self.population, key=lambda x: x[0]))
+        #if self.population:
+        #    print(min(self.population, key=lambda x: x[0]))
         return fitness
     
     def parse_genome(self, genome):
@@ -480,12 +480,20 @@ def calculate_population_distances(population):
     # Shape: (num_paths,)
     total_distances = np.sqrt(squared_distances).sum(axis=1)
 
+    # Calculate the distance from the last node to the first node for each path
+    # Shape: (num_paths,)
+    last_to_first_distances = np.sqrt(np.sum((pop_array[:, -1, :] - pop_array[:, 0, :])**2, axis=1))
+
+    # Add the distance from the last node to the first node to the total distances
+    total_distances += last_to_first_distances
+
     # Create the result list
     results = [[dist, path.tolist()] for dist, path in zip(total_distances, pop_array)]
     
     return results
 
 def calculate_population_distances_numpy(population):
+    # this function may not work and doesnt add last edge
     if not population:
         return []
     

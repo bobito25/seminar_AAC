@@ -11,5 +11,5 @@ def write_tsp_to_file(problem: dict):
         for city in problem["cities"]:
             f.write(f"{city[0]} {city[1]} {city[2]}\n")
 
-TSP = setup_tsp(20, 100, 100)
+TSP = setup_tsp(30, 100, 100)
 write_tsp_to_file(TSP)
